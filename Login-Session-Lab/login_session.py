@@ -2,11 +2,22 @@ from flask import Flask, render_template, request, url_for, redirect
 from flask import session as login_session
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'super-secret-key'
+app.config['SECRET_KEY'] = 'leshem2006'
 
-@app.route('/', ) # What methods are needed?
+@app.route('/', methods = ['GET', 'POST'] ) # What methods are needed?
 def home():
-	
+	if request.method== 'POST':
+		name = request.form['name']
+		age = request.form['age']
+		quote = request.form['quote']
+		login_session['name'] = name
+		login_session['age'] = age
+		login_session['quote'] = quote
+		try:
+			'age' in login_session and 'quote' in login_session and 'name' in login_session
+			return render_template('thanks.html')
+		except:
+			return render_template('error.html')
 	return render_template('home.html')
 
 
@@ -19,7 +30,7 @@ def error():
 @app.route('/display')
 def display():
 
-	return render_template('display.html', ) # What variables are needed?
+	return render_template('display.html', name = login_session['name'], age = login_session['age'] , quote = login_session['quote'] ) # What variables are needed?
 
 
 @app.route('/thanks')
